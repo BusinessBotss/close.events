@@ -215,7 +215,9 @@
   <div class="icon-row" aria-label="Event Highlights Icons"></div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec'; // REMEMBER TO UPDATE THIS
+    // **THIS IS THE CORRECTED SCRIPT URL**
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyYWFpVrPqyLwlx8Uh_AjQKTESuU_CRIzLTh-uvAZZIHHjR3HmXEoK5c1608kz8bzrz/exec';
+
     const form = document.getElementById('closeForm');
     const successMessage = document.getElementById('successMessage');
     const errorMessage = document.getElementById('errorMessage');
@@ -376,7 +378,9 @@
 
       // Update select options (more robust approach)
       const contactSelect = document.getElementById('contact');
+      // Ensure all options are correctly translated, including the placeholder
       contactSelect.options[0].text = t['select-option-placeholder'];
+      // Assuming options are always in this order and match the translation keys
       contactSelect.options[1].text = t['contact-whatsapp'];
       contactSelect.options[2].text = t['contact-email'];
       contactSelect.options[3].text = t['contact-sms'];
