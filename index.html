@@ -1,15 +1,44 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="CLOSE - Acceso restringido a eventos privados selectos."/>
-  <title>CLOSE | Restricted Access</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet"/>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLOSE – Private Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      /* Color Palette */
+      --color-black: #000;
+      --color-white: #fff;
+      --color-dark-gray: #444;
+      --color-light-gray: rgba(255, 255, 255, 0.05);
+      --color-accent-pink: #D1007F;
+      --color-dark-pink: #8B004B;
+      --color-gold: #FFD700;
+      --color-dark-bg-select: #111;
+
+      /* Font Families */
+      --font-primary: 'Cormorant Garamond', serif;
+
+      /* Spacing */
+      --spacing-xs: 10px;
+      --spacing-sm: 15px;
+      --spacing-md: 20px;
+      --spacing-lg: 30px;
+
+      /* Border Radii */
+      --border-radius-sm: 8px;
+      --border-radius-md: 12px;
+
+      /* Font Sizes */
+      --font-size-base: 1rem;
+      --font-size-lg: 1.1rem;
+      --font-size-xl: 2.5rem;
+    }
+
+    /* Base Styles */
     * {
       margin: 0;
       padding: 0;
@@ -17,316 +46,351 @@
     }
 
     body {
-      background-color: #000000;
-      color: white;
-      font-family: 'Cormorant Garamond', serif;
-      height: 100vh;
+      background: var(--color-black);
+      color: var(--color-white);
+      font-family: var(--font-primary);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      overflow-x: hidden;
-    }
-
-    .container {
-      max-width: 600px;
+      min-height: 100vh;
+      padding: var(--spacing-md);
       text-align: center;
-      padding: 2rem;
-      animation: fadeInUp 1s ease-out;
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      letter-spacing: 1px;
-      text-shadow: 0 0 5px #FFD700, 0 0 10px #D1007F;
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--spacing-md);
     }
 
-    p {
-      font-size: 1rem;
-      margin-bottom: 2rem;
-      opacity: 0.9;
-    }
-
-    form {
+    /* Container for the form */
+    .container {
+      width: 100%;
+      max-width: 500px;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-    }
-
-    input, textarea, select {
-      padding: 0.75rem;
-      border: none;
-      outline: none;
-      background-color: rgba(255, 255, 255, 0.05);
-      color: white;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      border-bottom: 2px solid transparent;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      border-bottom: 2px solid #FFD700;
-    }
-
-    button {
-      margin-top: 1.5rem;
-      padding: 0.75rem;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-      color: white;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #D1007F, #8B004B);
-      z-index: -1;
-      filter: blur(10px);
-      transform: scale(0.95);
-      transition: all 0.3s ease;
-    }
-
-    button:hover::before {
-      transform: scale(1.05);
-    }
-
-    button:hover {
-      text-shadow: 0 0 10px #FFD700, 0 0 20px #D1007F;
-    }
-
-    .success-message {
-      margin-top: 1rem;
-      color: #FFD700;
-      font-weight: bold;
-      display: none;
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    .icon-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .icon-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .icon-wrapper img {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-      margin-bottom: 0.5rem;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.6' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
-      mix-blend-mode: screen;
-      opacity: 0.05;
-      z-index: -2;
+      gap: var(--spacing-sm);
+      animation: fadeInUp 0.8s ease-out forwards;
+      opacity: 0;
+      transform: translateY(var(--spacing-lg));
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Form Elements */
+    label {
+      text-align: left;
+      font-size: var(--font-size-lg);
+    }
+
+    input,
+    select,
+    textarea {
+      padding: var(--spacing-xs);
+      background: var(--color-light-gray);
+      border: 1px solid var(--color-dark-gray);
+      border-radius: var(--border-radius-sm);
+      color: var(--color-white);
+      font-family: var(--font-primary);
+      font-size: var(--font-size-base);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--color-accent-pink);
+      outline: none;
+    }
+
+    /* Button Styles */
+    .btn {
+      padding: 12px; /* Keeping this specific for button */
+      font-weight: bold;
+      font-size: var(--font-size-lg);
+      color: var(--color-white);
+      background: transparent;
+      border: 2px solid;
+      border-image: linear-gradient(45deg, var(--color-dark-pink), var(--color-accent-pink)) 1;
+      border-radius: var(--border-radius-md);
+      position: relative;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease, background 0.3s ease;
+    }
+
+    .btn:hover {
+      box-shadow: 0 0 12px var(--color-accent-pink);
+      background: var(--color-light-gray);
+    }
+
+    /* Icon Row */
+    .icon-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+      gap: var(--spacing-xs);
+      margin-top: var(--spacing-lg);
+    }
+
+    .icon-wrapper img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    /* Success Message */
+    .success-message {
+      color: var(--color-gold);
+      margin-top: var(--spacing-md);
+      font-weight: bold;
+      animation: fadeIn 0.5s ease-out forwards;
     }
 
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
+
+    /* Language Selector */
+    .lang-select {
+      align-self: flex-end;
+      margin-bottom: var(--spacing-sm);
+      background: var(--color-dark-bg-select);
+      color: var(--color-gold);
+      border: none;
+      font-family: var(--font-primary);
+      padding: var(--spacing-xs);
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <select id="language-select"></select>
+  <select class="lang-select" onchange="updateText(this.value)" aria-label="Select Language">
+    <option value="en">EN</option>
+    <option value="es">ES</option>
+    <option value="fr">FR</option>
+    <option value="de">DE</option>
+  </select>
 
-  <div class="container">
-    <h1 id="title">CLOSE</h1>
-    <p id="subtitle">Acceso restringido a experiencias sensoriales únicas.</p>
+  <h1 id="title">Request Access to CLOSE</h1>
+  <form class="container" id="closeForm" aria-live="polite">
+    <label for="name" id="label-name">Full Name</label>
+    <input type="text" id="name" name="name" required autocomplete="name">
 
-    <form id="access-form">
-      <input type="text" name="nombre" placeholder="" required />
-      <input type="number" name="edad" placeholder="" min="18" required />
-      <input type="text" name="ciudad" placeholder="" required />
-      <select name="contacto" required></select>
-      <input type="tel" name="telefono" placeholder="" required />
-      <input type="text" name="redSocial" placeholder="" />
-      <textarea name="motivo" rows="4" placeholder="" required></textarea>
-      <input type="text" name="disponibilidad" placeholder="" required />
-      <button type="submit" id="submit-btn">Enviar Solicitud</button>
-      <div class="success-message" id="success-message"></div>
-    </form>
+    <label for="age" id="label-age">Age</label>
+    <input type="number" id="age" name="age" min="18" required aria-describedby="age-help">
+    <small id="age-help" style="display:none;">Must be 18 years or older.</small>
 
-    <div class="icon-row"></div>
-  </div>
+    <label for="city" id="label-city">City</label>
+    <input type="text" id="city" name="city" required autocomplete="address-level2">
+
+    <label for="contact" id="label-contact">Preferred Contact Method</label>
+    <select id="contact" name="contact" required>
+      <option value="">Select</option>
+      <option value="WhatsApp">WhatsApp</option>
+      <option value="Email">Email</option>
+      <option value="SMS">SMS</option>
+    </select>
+
+    <label for="number" id="label-number">Contact Number</label>
+    <input type="tel" id="number" name="number" required autocomplete="tel">
+
+    <label for="portfolio" id="label-portfolio">Social/Portfolio (optional)</label>
+    <input type="url" id="portfolio" name="portfolio" placeholder="e.g., https://instagram.com/yourprofile">
+
+    <label for="why" id="label-why">Why do you want to attend?</label>
+    <textarea id="why" name="why" rows="4" required></textarea>
+
+    <label for="availability" id="label-availability">Availability</label>
+    <input type="text" id="availability" name="availability" required placeholder="e.g., Weekends, Evenings">
+
+    <button class="btn" type="submit">Submit Request</button>
+    <div class="success-message" id="successMessage" style="display:none" role="status">Request Sent ✔</div>
+    <div class="error-message" id="errorMessage" style="display:none; color: red; margin-top: 10px;" role="alert"></div>
+  </form>
+
+  <div class="icon-row" aria-label="Event Highlights Icons"></div>
 
   <script>
-    (function() {
-      const translations = {
-        es: {
-          title: "CLOSE",
-          subtitle: "Acceso restringido a experiencias sensoriales únicas.",
-          nombre: "Nombre completo",
-          edad: "Edad",
-          ciudad: "Ciudad de residencia",
-          telefono: "Número de contacto",
-          redSocial: "Red social o portafolio (opcional)",
-          motivo: "¿Por qué quieres asistir?",
-          disponibilidad: "¿Qué disponibilidad tienes?",
-          contacto: "Método de contacto preferido"
-        },
-        en: {
-          title: "CLOSE",
-          subtitle: "Restricted access to unique sensory experiences.",
-          nombre: "Full Name",
-          edad: "Age",
-          ciudad: "City of residence",
-          telefono: "Contact Number",
-          redSocial: "Social Media or Portfolio (optional)",
-          motivo: "Why do you want to attend?",
-          disponibilidad: "What availability do you have?",
-          contacto: "Preferred contact method"
-        },
-        fr: {
-          title: "CLOSE",
-          subtitle: "Accès restreint à des expériences sensorielles uniques.",
-          nombre: "Nom complet",
-          edad: "Âge",
-          ciudad: "Ville de résidence",
-          telefono: "Numéro de contact",
-          redSocial: "Réseau social ou portfolio (optionnel)",
-          motivo: "Pourquoi voulez-vous assister?",
-          disponibilidad: "Quelle est votre disponibilité?",
-          contacto: "Méthode de contact préférée"
-        },
-        de: {
-          title: "CLOSE",
-          subtitle: "Eingeschränkter Zugang zu einzigartigen sensorischen Erlebnissen.",
-          nombre: "Vollständiger Name",
-          edad: "Alter",
-          ciudad: "Wohnort",
-          telefono: "Kontaktnummer",
-          redSocial: "Soziale Medien oder Portfolio (optional)",
-          motivo: "Warum möchten Sie teilnehmen?",
-          disponibilidad: "Welche Verfügbarkeit haben Sie?",
-          contacto: "Bevorzugte Kontaktmethode"
-        }
-      };
+    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec'; // REMEMBER TO UPDATE THIS
+    const form = document.getElementById('closeForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
 
-      let currentLang = "es";
-      
-      // Language selector population
-      const langSelect = document.getElementById('language-select');
-      Object.keys(translations).forEach(lang => {
-        const option = document.createElement('option');
-        option.value = lang;
-        option.textContent = lang.toUpperCase();
-        if (lang === currentLang) option.selected = true;
-        langSelect.appendChild(option);
-      });
+    // Handle form submission
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      // Clear previous messages
+      successMessage.style.display = 'none';
+      errorMessage.style.display = 'none';
+      errorMessage.textContent = '';
 
-      // Update text function
-      function updateText(lang) {
-        const t = translations[lang];
-        document.getElementById("title").textContent = t.title;
-        document.getElementById("subtitle").textContent = t.subtitle;
+      const formData = new FormData(form);
 
-        const inputs = document.querySelectorAll("input, textarea");
-        inputs.forEach(input => {
-          switch (input.name) {
-            case "nombre": input.placeholder = t.nombre; break;
-            case "edad": input.placeholder = t.edad; break;
-            case "ciudad": input.placeholder = t.ciudad; break;
-            case "telefono": input.placeholder = t.telefono; break;
-            case "redSocial": input.placeholder = t.redSocial; break;
-            case "motivo": input.placeholder = t.motivo; break;
-            case "disponibilidad": input.placeholder = t.disponibilidad; break;
-          }
-        });
-
-        const contactoSelect = document.querySelector("select[name='contacto']");
-        contactoSelect.innerHTML = `<option value="">${t.contacto}</option>
-          <option value="WhatsApp">WhatsApp</option>
-          <option value="Email">Email</option>
-          <option value="SMS">SMS</option>`;
+      // Simple client-side validation for age
+      const ageInput = document.getElementById('age');
+      if (ageInput.value < 18) {
+        errorMessage.textContent = translations[document.querySelector('.lang-select').value]['error-age'];
+        errorMessage.style.display = 'block';
+        ageInput.focus();
+        return; // Stop form submission
       }
 
-      // Initial language setup
-      updateText(currentLang);
-      langSelect.addEventListener("change", e => {
-        currentLang = e.target.value;
-        updateText(currentLang);
-      });
-
-      // Form submission
-      const form = document.getElementById("access-form");
-      const successMessage = document.getElementById("success-message");
-
-      form.addEventListener("submit", function(e) {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        console.log("Datos enviados:", data);
-
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbXXXXXXXXXXXXXXXXXXX/exec';
-
-        fetch(scriptURL, {
-          method: "POST",
-          mode: "no-cors",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" }
+      fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.text(); // Or response.json() if your script returns JSON
         })
-        .then(() => {
-          successMessage.textContent = currentLang === 'es' ? 
-            "¡Solicitud enviada con éxito!" : 
-            (currentLang === 'en' ? "Request sent successfully!" : 
-            (currentLang === 'fr' ? "Demande envoyée avec succès!" : 
-            "Anfrage erfolgreich gesendet!"));
-          successMessage.style.display = "block";
-          form.reset();
+        .then(data => {
+          console.log('Form submission successful:', data);
+          form.reset(); // Clear the form fields
+          successMessage.style.display = 'block';
+          // Optionally hide success message after a few seconds
+          setTimeout(() => {
+            successMessage.style.display = 'none';
+          }, 5000);
         })
-        .catch(error => {
-          console.error("Error al enviar los datos:", error);
-          alert(currentLang === 'es' ? 
-            "Hubo un problema. Inténtalo más tarde." : 
-            (currentLang === 'en' ? "There was a problem. Please try again later." : 
-            (currentLang === 'fr' ? "Il y a eu un problème. Veuillez réessayer plus tard." : 
-            "Es gab ein Problem. Bitte versuchen Sie es später erneut.")));
+        .catch(err => {
+          console.error('Error sending form:', err);
+          errorMessage.textContent = translations[document.querySelector('.lang-select').value]['error-send'];
+          errorMessage.style.display = 'block';
         });
-      });
+    });
 
-      // Generate icons
-      const icons = Array.from({length: 10}, (_, i) => `icon${i+1}.png`);
-      const iconRow = document.querySelector(".icon-row");
-      
-      icons.forEach(src => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "icon-wrapper";
-        const img = document.createElement("img");
-        img.src = src;
-        img.alt = src.replace(/\.png$/, "");
-        wrapper.appendChild(img);
-        iconRow.appendChild(wrapper);
-      });
-    })();
+    // Dynamic Icon Loading
+    const icons = [
+      "icon1.png", "icon2.png", "icon3.png", "icon4.png", "icon5.png",
+      "icon6.png", "icon7.png", "icon8.png", "icon9.png", "icon10.png"
+    ];
+    const iconRow = document.querySelector(".icon-row");
+    icons.forEach(src => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "icon-wrapper";
+      const img = document.createElement("img");
+      img.src = `icons/${src}`; // Ensure your icons are in a folder named 'icons'
+      img.alt = src.replace(/\.png$/, "").replace(/([A-Z])/g, ' $1').trim().toUpperCase(); // Improved alt text
+      wrapper.appendChild(img);
+      iconRow.appendChild(wrapper);
+    });
+
+    // Multi-language Translations
+    const translations = {
+      en: {
+        title: "Request Access to CLOSE",
+        'label-name': "Full Name",
+        'label-age': "Age",
+        'label-city': "City",
+        'label-contact': "Preferred Contact Method",
+        'label-number': "Contact Number",
+        'label-portfolio': "Social/Portfolio (optional)",
+        'label-why': "Why do you want to attend?",
+        'label-availability': "Availability",
+        'select-option-placeholder': "Select",
+        'contact-whatsapp': "WhatsApp",
+        'contact-email': "Email",
+        'contact-sms': "SMS",
+        'submit-button': "Submit Request",
+        'success-message': "Request Sent ✔",
+        'error-age': "You must be 18 years or older to apply.",
+        'error-send': "Error sending form. Please try again."
+      },
+      es: {
+        title: "Solicita acceso a CLOSE",
+        'label-name': "Nombre completo",
+        'label-age': "Edad",
+        'label-city': "Ciudad",
+        'label-contact': "Método de contacto preferido",
+        'label-number': "Número de contacto",
+        'label-portfolio': "Red social / Portafolio (opcional)",
+        'label-why': "¿Por qué quieres asistir?",
+        'label-availability': "Disponibilidad",
+        'select-option-placeholder': "Seleccionar",
+        'contact-whatsapp': "WhatsApp",
+        'contact-email': "Correo electrónico",
+        'contact-sms': "SMS",
+        'submit-button': "Enviar solicitud",
+        'success-message': "Solicitud enviada ✔",
+        'error-age': "Debes tener 18 años o más para aplicar.",
+        'error-send': "Error al enviar el formulario. Por favor, inténtalo de nuevo."
+      },
+      fr: {
+        title: "Demander l'accès à CLOSE",
+        'label-name': "Nom complet",
+        'label-age': "Âge",
+        'label-city': "Ville",
+        'label-contact': "Méthode de contact préférée",
+        'label-number': "Numéro de contact",
+        'label-portfolio': "Réseau social / Portfolio (optionnel)",
+        'label-why': "Pourquoi souhaitez-vous participer ?",
+        'label-availability': "Disponibilité",
+        'select-option-placeholder': "Sélectionner",
+        'contact-whatsapp': "WhatsApp",
+        'contact-email': "E-mail",
+        'contact-sms': "SMS",
+        'submit-button': "Envoyer la demande",
+        'success-message': "Demande envoyée ✔",
+        'error-age': "Vous devez avoir 18 ans ou plus pour postuler.",
+        'error-send': "Erreur lors de l'envoi du formulaire. Veuillez réessayer."
+      },
+      de: {
+        title: "Zugang zu CLOSE anfragen",
+        'label-name': "Vollständiger Name",
+        'label-age': "Alter",
+        'label-city': "Stadt",
+        'label-contact': "Bevorzugte Kontaktmethode",
+        'label-number': "Telefonnummer",
+        'label-portfolio': "Soziales Profil / Portfolio (optional)",
+        'label-why': "Warum möchtest du teilnehmen?",
+        'label-availability': "Verfügbarkeit",
+        'select-option-placeholder': "Auswählen",
+        'contact-whatsapp': "WhatsApp",
+        'contact-email': "E-Mail",
+        'contact-sms': "SMS",
+        'submit-button': "Anfrage senden",
+        'success-message': "Anfrage gesendet ✔",
+        'error-age': "Sie müssen mindestens 18 Jahre alt sein, um sich zu bewerben.",
+        'error-send': "Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut."
+      }
+    };
+
+    function updateText(lang) {
+      const t = translations[lang];
+
+      // Update static texts
+      document.getElementById('title').innerText = t.title;
+      document.getElementById('label-name').innerText = t['label-name'];
+      document.getElementById('label-age').innerText = t['label-age'];
+      document.getElementById('label-city').innerText = t['label-city'];
+      document.getElementById('label-contact').innerText = t['label-contact'];
+      document.getElementById('label-number').innerText = t['label-number'];
+      document.getElementById('label-portfolio').innerText = t['label-portfolio'];
+      document.getElementById('label-why').innerText = t['label-why'];
+      document.getElementById('label-availability').innerText = t['label-availability'];
+      document.querySelector('.btn').innerText = t['submit-button'];
+      successMessage.innerText = t['success-message'];
+
+      // Update select options (more robust approach)
+      const contactSelect = document.getElementById('contact');
+      contactSelect.options[0].text = t['select-option-placeholder'];
+      contactSelect.options[1].text = t['contact-whatsapp'];
+      contactSelect.options[2].text = t['contact-email'];
+      contactSelect.options[3].text = t['contact-sms'];
+
+      // Clear any existing error messages when language changes
+      errorMessage.style.display = 'none';
+      errorMessage.textContent = '';
+    }
+
+    // Initialize text on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const initialLang = document.querySelector('.lang-select').value;
+      updateText(initialLang);
+    });
   </script>
 </body>
 </html>
