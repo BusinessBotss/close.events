@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="CLOSE - Acceso restringido a eventos privados selectos. Solicitud de acceso exclusivo."/>
+  <title>CLOSE | Acceso Restringido</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* RESET BÁSICO */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000000;
+      color: white;
+      font-family: 'Cormorant Garamond', serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 600px;
+      padding: 2rem;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 5px #FFD700, 0 0 10px #D1007F;
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input, textarea, select {
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0;
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border-bottom: 2px solid transparent;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-bottom: 2px solid #FFD700;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      color: white;
+      background-color: transparent;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #D1007F, #8B004B);
+      z-index: -1;
+      filter: blur(10px);
+      transform: scale(0.95);
+      transition: all 0.3s ease;
+    }
+
+    button:hover::before {
+      transform: scale(1.05);
+    }
+
+    .success-message {
+      margin-top: 1rem;
+      color: #FFD700;
+      font-weight: bold;
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Textura granulada */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="#000000"/><filter id="noise"><feTurbulence type="turbulence" baseFrequency="0.6" numOctaves="3" result="noise"/></filter></svg>');
+      mix-blend-mode: screen;
+      opacity: 0.05;
+      z-index: -2;
+    }
+
+    /* Efecto glow en botones */
+    button {
+      text-shadow: 0 0 5px #FFD700, 0 0 10px #D1007F;
+    }
+
+    button:hover {
+      text-shadow: 0 0 10px #FFD700, 0 0 20px #D1007F;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>CLOSE</h1>
+    <p>Acceso restringido a experiencias sensoriales únicas.</p>
+
+    <form id="access-form">
+      <input type="text" name="nombre" placeholder="Nombre completo" required />
+      <input type="number" name="edad" placeholder="Edad" min="18" required />
+      <input type="text" name="ciudad" placeholder="Ciudad de residencia" required />
+      <select name="contacto" required>
+        <option value="">Método de contacto preferido</option>
+        <option value="WhatsApp">WhatsApp</option>
+        <option value="Email">Email</option>
+        <option value="SMS">SMS</option>
+      </select>
+      <input type="tel" name="telefono" placeholder="Número de contacto" required />
+      <input type="text" name="redSocial" placeholder="Red social o portafolio (opcional)" />
+      <textarea name="motivo" rows="4" placeholder="¿Por qué quieres asistir?" required></textarea>
+      <input type="text" name="disponibilidad" placeholder="¿Qué disponibilidad tienes?" required />
+      <button type="submit">Enviar Solicitud</button>
+      <div class="success-message" id="success-message">✅ Tu solicitud ha sido enviada. Pronto nos pondremos en contacto contigo.</div>
+    </form>
+  </div>
+
+  <script>
+    (function () {
+      const form = document.getElementById("access-form");
+      const successMessage = document.getElementById("success-message");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        console.log("Datos del formulario:", data);
+
+        // URL del Google Apps Script (reemplazar con la tuya)
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbXXXXXXXXXXXXXXXXXXX/exec';
+
+        fetch(scriptURL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(() => {
+          successMessage.style.display = "block";
+          form.reset();
+        })
+        .catch(error => {
+          console.error("Error al enviar datos:", error);
+          alert("Hubo un problema al enviar tu solicitud. Inténtalo más tarde.");
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
