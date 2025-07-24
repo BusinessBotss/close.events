@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="CLOSE - Acceso restringido a eventos privados selectos. Solicitud de acceso exclusivo."/>
-  <title>CLOSE | Acceso Restringido</title>
+  <meta name="description" content="CLOSE - Acceso restringido a eventos privados selectos."/>
+  <title>CLOSE | Restricted Access</title>
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet"/>
 
   <style>
-    /* RESET BÁSICO */
     * {
       margin: 0;
       padding: 0;
@@ -25,21 +24,21 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     .container {
-      text-align: center;
       max-width: 600px;
+      text-align: center;
       padding: 2rem;
       animation: fadeInUp 1s ease-out;
     }
 
     h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
       text-shadow: 0 0 5px #FFD700, 0 0 10px #D1007F;
-      letter-spacing: 2px;
     }
 
     p {
@@ -57,7 +56,6 @@
     input, textarea, select {
       padding: 0.75rem;
       border: none;
-      border-radius: 0;
       outline: none;
       background-color: rgba(255, 255, 255, 0.05);
       color: white;
@@ -74,15 +72,12 @@
       margin-top: 1.5rem;
       padding: 0.75rem;
       border: none;
-      border-radius: 0;
       cursor: pointer;
       font-weight: bold;
       font-size: 1rem;
       color: white;
-      background-color: transparent;
       position: relative;
       overflow: hidden;
-      z-index: 1;
     }
 
     button::before {
@@ -103,6 +98,10 @@
       transform: scale(1.05);
     }
 
+    button:hover {
+      text-shadow: 0 0 10px #FFD700, 0 0 20px #D1007F;
+    }
+
     .success-message {
       margin-top: 1rem;
       color: #FFD700;
@@ -111,23 +110,26 @@
       animation: fadeIn 0.5s ease-in-out;
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .icon-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .icon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* Textura granulada */
+    .icon-wrapper img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-bottom: 0.5rem;
+    }
+
     body::after {
       content: '';
       position: fixed;
@@ -135,82 +137,196 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="#000000"/><filter id="noise"><feTurbulence type="turbulence" baseFrequency="0.6" numOctaves="3" result="noise"/></filter></svg>');
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.6' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
       mix-blend-mode: screen;
       opacity: 0.05;
       z-index: -2;
     }
 
-    /* Efecto glow en botones */
-    button {
-      text-shadow: 0 0 5px #FFD700, 0 0 10px #D1007F;
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    button:hover {
-      text-shadow: 0 0 10px #FFD700, 0 0 20px #D1007F;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
+  <select id="language-select"></select>
 
   <div class="container">
-    <h1>CLOSE</h1>
-    <p>Acceso restringido a experiencias sensoriales únicas.</p>
+    <h1 id="title">CLOSE</h1>
+    <p id="subtitle">Acceso restringido a experiencias sensoriales únicas.</p>
 
     <form id="access-form">
-      <input type="text" name="nombre" placeholder="Nombre completo" required />
-      <input type="number" name="edad" placeholder="Edad" min="18" required />
-      <input type="text" name="ciudad" placeholder="Ciudad de residencia" required />
-      <select name="contacto" required>
-        <option value="">Método de contacto preferido</option>
-        <option value="WhatsApp">WhatsApp</option>
-        <option value="Email">Email</option>
-        <option value="SMS">SMS</option>
-      </select>
-      <input type="tel" name="telefono" placeholder="Número de contacto" required />
-      <input type="text" name="redSocial" placeholder="Red social o portafolio (opcional)" />
-      <textarea name="motivo" rows="4" placeholder="¿Por qué quieres asistir?" required></textarea>
-      <input type="text" name="disponibilidad" placeholder="¿Qué disponibilidad tienes?" required />
-      <button type="submit">Enviar Solicitud</button>
-      <div class="success-message" id="success-message">✅ Tu solicitud ha sido enviada. Pronto nos pondremos en contacto contigo.</div>
+      <input type="text" name="nombre" placeholder="" required />
+      <input type="number" name="edad" placeholder="" min="18" required />
+      <input type="text" name="ciudad" placeholder="" required />
+      <select name="contacto" required></select>
+      <input type="tel" name="telefono" placeholder="" required />
+      <input type="text" name="redSocial" placeholder="" />
+      <textarea name="motivo" rows="4" placeholder="" required></textarea>
+      <input type="text" name="disponibilidad" placeholder="" required />
+      <button type="submit" id="submit-btn">Enviar Solicitud</button>
+      <div class="success-message" id="success-message"></div>
     </form>
+
+    <div class="icon-row"></div>
   </div>
 
   <script>
-    (function () {
+    (function() {
+      const translations = {
+        es: {
+          title: "CLOSE",
+          subtitle: "Acceso restringido a experiencias sensoriales únicas.",
+          nombre: "Nombre completo",
+          edad: "Edad",
+          ciudad: "Ciudad de residencia",
+          telefono: "Número de contacto",
+          redSocial: "Red social o portafolio (opcional)",
+          motivo: "¿Por qué quieres asistir?",
+          disponibilidad: "¿Qué disponibilidad tienes?",
+          contacto: "Método de contacto preferido"
+        },
+        en: {
+          title: "CLOSE",
+          subtitle: "Restricted access to unique sensory experiences.",
+          nombre: "Full Name",
+          edad: "Age",
+          ciudad: "City of residence",
+          telefono: "Contact Number",
+          redSocial: "Social Media or Portfolio (optional)",
+          motivo: "Why do you want to attend?",
+          disponibilidad: "What availability do you have?",
+          contacto: "Preferred contact method"
+        },
+        fr: {
+          title: "CLOSE",
+          subtitle: "Accès restreint à des expériences sensorielles uniques.",
+          nombre: "Nom complet",
+          edad: "Âge",
+          ciudad: "Ville de résidence",
+          telefono: "Numéro de contact",
+          redSocial: "Réseau social ou portfolio (optionnel)",
+          motivo: "Pourquoi voulez-vous assister?",
+          disponibilidad: "Quelle est votre disponibilité?",
+          contacto: "Méthode de contact préférée"
+        },
+        de: {
+          title: "CLOSE",
+          subtitle: "Eingeschränkter Zugang zu einzigartigen sensorischen Erlebnissen.",
+          nombre: "Vollständiger Name",
+          edad: "Alter",
+          ciudad: "Wohnort",
+          telefono: "Kontaktnummer",
+          redSocial: "Soziale Medien oder Portfolio (optional)",
+          motivo: "Warum möchten Sie teilnehmen?",
+          disponibilidad: "Welche Verfügbarkeit haben Sie?",
+          contacto: "Bevorzugte Kontaktmethode"
+        }
+      };
+
+      let currentLang = "es";
+      
+      // Language selector population
+      const langSelect = document.getElementById('language-select');
+      Object.keys(translations).forEach(lang => {
+        const option = document.createElement('option');
+        option.value = lang;
+        option.textContent = lang.toUpperCase();
+        if (lang === currentLang) option.selected = true;
+        langSelect.appendChild(option);
+      });
+
+      // Update text function
+      function updateText(lang) {
+        const t = translations[lang];
+        document.getElementById("title").textContent = t.title;
+        document.getElementById("subtitle").textContent = t.subtitle;
+
+        const inputs = document.querySelectorAll("input, textarea");
+        inputs.forEach(input => {
+          switch (input.name) {
+            case "nombre": input.placeholder = t.nombre; break;
+            case "edad": input.placeholder = t.edad; break;
+            case "ciudad": input.placeholder = t.ciudad; break;
+            case "telefono": input.placeholder = t.telefono; break;
+            case "redSocial": input.placeholder = t.redSocial; break;
+            case "motivo": input.placeholder = t.motivo; break;
+            case "disponibilidad": input.placeholder = t.disponibilidad; break;
+          }
+        });
+
+        const contactoSelect = document.querySelector("select[name='contacto']");
+        contactoSelect.innerHTML = `<option value="">${t.contacto}</option>
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="Email">Email</option>
+          <option value="SMS">SMS</option>`;
+      }
+
+      // Initial language setup
+      updateText(currentLang);
+      langSelect.addEventListener("change", e => {
+        currentLang = e.target.value;
+        updateText(currentLang);
+      });
+
+      // Form submission
       const form = document.getElementById("access-form");
       const successMessage = document.getElementById("success-message");
 
-      form.addEventListener("submit", function (e) {
+      form.addEventListener("submit", function(e) {
         e.preventDefault();
-
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
 
-        console.log("Datos del formulario:", data);
+        console.log("Datos enviados:", data);
 
-        // URL del Google Apps Script (reemplazar con la tuya)
         const scriptURL = 'https://script.google.com/macros/s/AKfycbXXXXXXXXXXXXXXXXXXX/exec';
 
         fetch(scriptURL, {
           method: "POST",
           mode: "no-cors",
           body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json"
-          }
+          headers: { "Content-Type": "application/json" }
         })
         .then(() => {
+          successMessage.textContent = currentLang === 'es' ? 
+            "¡Solicitud enviada con éxito!" : 
+            (currentLang === 'en' ? "Request sent successfully!" : 
+            (currentLang === 'fr' ? "Demande envoyée avec succès!" : 
+            "Anfrage erfolgreich gesendet!"));
           successMessage.style.display = "block";
           form.reset();
         })
         .catch(error => {
-          console.error("Error al enviar datos:", error);
-          alert("Hubo un problema al enviar tu solicitud. Inténtalo más tarde.");
+          console.error("Error al enviar los datos:", error);
+          alert(currentLang === 'es' ? 
+            "Hubo un problema. Inténtalo más tarde." : 
+            (currentLang === 'en' ? "There was a problem. Please try again later." : 
+            (currentLang === 'fr' ? "Il y a eu un problème. Veuillez réessayer plus tard." : 
+            "Es gab ein Problem. Bitte versuchen Sie es später erneut.")));
         });
+      });
+
+      // Generate icons
+      const icons = Array.from({length: 10}, (_, i) => `icon${i+1}.png`);
+      const iconRow = document.querySelector(".icon-row");
+      
+      icons.forEach(src => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "icon-wrapper";
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = src.replace(/\.png$/, "");
+        wrapper.appendChild(img);
+        iconRow.appendChild(wrapper);
       });
     })();
   </script>
-
 </body>
 </html>
