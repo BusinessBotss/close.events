@@ -1,12 +1,15 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLOSE – Private Events</title>
+
+  <!-- Google Fonts (clean) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       /* Color Palette */
@@ -57,12 +60,20 @@
       text-align: center;
     }
 
+    /* 3D gradient title */
     h1 {
-      font-size: var(--font-size-xl);
+      font-size: 3.5rem;
+      font-weight: 700;
       margin-bottom: var(--spacing-md);
+      background: linear-gradient(135deg, #ff0844 0%, #8B004B 50%, #ff0844 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 8px rgba(209,0,127,0.4);
+      transform: perspective(400px) rotateX(10deg);
+      letter-spacing: 1px;
     }
 
-    /* Container for the form */
     .container {
       width: 100%;
       max-width: 500px;
@@ -81,7 +92,6 @@
       }
     }
 
-    /* Form Elements */
     label {
       text-align: left;
       font-size: var(--font-size-lg);
@@ -106,9 +116,8 @@
       outline: none;
     }
 
-    /* Button Styles */
     .btn {
-      padding: 12px; /* Keeping this specific for button */
+      padding: 12px;
       font-weight: bold;
       font-size: var(--font-size-lg);
       color: var(--color-white);
@@ -116,7 +125,6 @@
       border: 2px solid;
       border-image: linear-gradient(45deg, var(--color-dark-pink), var(--color-accent-pink)) 1;
       border-radius: var(--border-radius-md);
-      position: relative;
       cursor: pointer;
       transition: box-shadow 0.3s ease, background 0.3s ease;
     }
@@ -126,7 +134,6 @@
       background: var(--color-light-gray);
     }
 
-    /* Success Message */
     .success-message {
       color: var(--color-gold);
       margin-top: var(--spacing-md);
@@ -139,7 +146,6 @@
       to { opacity: 1; }
     }
 
-    /* Language Selector */
     .lang-select {
       align-self: flex-end;
       margin-bottom: var(--spacing-sm);
@@ -154,6 +160,8 @@
   </style>
 </head>
 <body>
+
+  <!-- Language switcher -->
   <select class="lang-select" onchange="updateText(this.value)" aria-label="Select Language">
     <option value="en">EN</option>
     <option value="es">ES</option>
@@ -161,7 +169,8 @@
     <option value="de">DE</option>
   </select>
 
-  <h1 id="title">Request Access to CLOSE</h1>
+  <h1 id="title">Join CLOSE</h1>
+
   <form class="container" id="closeForm" aria-live="polite">
     <label for="name" id="label-name">Full Name</label>
     <input type="text" id="name" name="name" required autocomplete="name">
@@ -185,7 +194,7 @@
     <input type="tel" id="number" name="number" required autocomplete="tel">
 
     <label for="portfolio" id="label-portfolio">Social/Portfolio (optional)</label>
-    <input type="url" id="portfolio" name="portfolio" placeholder="e.g., https://instagram.com/yourprofile">
+    <input type="url" id="portfolio" name="portfolio" placeholder="https://instagram.com/yourprofile">
 
     <label for="why" id="label-why">Why do you want to attend?</label>
     <textarea id="why" name="why" rows="4" required></textarea>
@@ -194,65 +203,51 @@
     <input type="text" id="availability" name="availability" required placeholder="e.g., Weekends, Evenings">
 
     <button class="btn" type="submit">Submit Request</button>
+
     <div class="success-message" id="successMessage" style="display:none" role="status">Request Sent ✔</div>
     <div class="error-message" id="errorMessage" style="display:none; color: red; margin-top: 10px;" role="alert"></div>
   </form>
 
   <script>
-    // ¡IMPORTANTE! Asegúrate de que esta URL sea la de tu Google Apps Script desplegado.
-    // La URL correcta que obtuviste es:
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyYWFpVrPqyLwlx8Uh_AjQKTESuU_CRIzLTh-uvAZZIHHjR3HmXEoK5c1608kz8bzrz/exec';
+    const scriptURL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 
     const form = document.getElementById('closeForm');
     const successMessage = document.getElementById('successMessage');
     const errorMessage = document.getElementById('errorMessage');
 
-    // Maneja el envío del formulario
     form.addEventListener('submit', e => {
       e.preventDefault();
-      // Limpia mensajes anteriores
       successMessage.style.display = 'none';
       errorMessage.style.display = 'none';
       errorMessage.textContent = '';
 
-      const formData = new FormData(form);
-
-      // Validación simple del lado del cliente para la edad
       const ageInput = document.getElementById('age');
       if (ageInput.value < 18) {
         errorMessage.textContent = translations[document.querySelector('.lang-select').value]['error-age'];
         errorMessage.style.display = 'block';
         ageInput.focus();
-        return; // Detener el envío del formulario
+        return;
       }
 
-      fetch(scriptURL, { method: 'POST', body: formData })
+      fetch(scriptURL, { method: 'POST', body: new FormData(form) })
         .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.text(); // O response.json() si tu script devuelve JSON
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.text();
         })
-        .then(data => {
-          console.log('Form submission successful:', data);
-          form.reset(); // Limpia los campos del formulario
+        .then(() => {
+          form.reset();
           successMessage.style.display = 'block';
-          // Opcionalmente, oculta el mensaje de éxito después de unos segundos
-          setTimeout(() => {
-            successMessage.style.display = 'none';
-          }, 5000);
+          setTimeout(() => successMessage.style.display = 'none', 5000);
         })
-        .catch(err => {
-          console.error('Error sending form:', err);
+        .catch(() => {
           errorMessage.textContent = translations[document.querySelector('.lang-select').value]['error-send'];
           errorMessage.style.display = 'block';
         });
     });
 
-    // Traducciones Multi-idioma
     const translations = {
       en: {
-        title: "Request Access to CLOSE",
+        title: "Join CLOSE",
         'label-name': "Full Name",
         'label-age': "Age",
         'label-city': "City",
@@ -271,7 +266,7 @@
         'error-send': "Error sending form. Please try again."
       },
       es: {
-        title: "Solicita acceso a CLOSE",
+        title: "Unirse a CLOSE",
         'label-name': "Nombre completo",
         'label-age': "Edad",
         'label-city': "Ciudad",
@@ -290,7 +285,7 @@
         'error-send': "Error al enviar el formulario. Por favor, inténtalo de nuevo."
       },
       fr: {
-        title: "Demander l'accès à CLOSE",
+        title: "Rejoindre CLOSE",
         'label-name': "Nom complet",
         'label-age': "Âge",
         'label-city': "Ville",
@@ -309,7 +304,7 @@
         'error-send': "Erreur lors de l'envoi du formulaire. Veuillez réessayer."
       },
       de: {
-        title: "Zugang zu CLOSE anfragen",
+        title: "CLOSE beitreten",
         'label-name': "Vollständiger Name",
         'label-age': "Alter",
         'label-city': "Stadt",
@@ -331,8 +326,6 @@
 
     function updateText(lang) {
       const t = translations[lang];
-
-      // Actualizar textos estáticos
       document.getElementById('title').innerText = t.title;
       document.getElementById('label-name').innerText = t['label-name'];
       document.getElementById('label-age').innerText = t['label-age'];
@@ -345,24 +338,19 @@
       document.querySelector('.btn').innerText = t['submit-button'];
       successMessage.innerText = t['success-message'];
 
-      // Actualizar opciones de selección
       const contactSelect = document.getElementById('contact');
       contactSelect.options[0].text = t['select-option-placeholder'];
       contactSelect.options[1].text = t['contact-whatsapp'];
       contactSelect.options[2].text = t['contact-email'];
       contactSelect.options[3].text = t['contact-sms'];
 
-      // Limpiar cualquier mensaje de error existente al cambiar el idioma
       errorMessage.style.display = 'none';
       errorMessage.textContent = '';
     }
 
-    // Inicializar el texto al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
-      const initialLang = document.querySelector('.lang-select').value;
-      updateText(initialLang);
+      updateText(document.querySelector('.lang-select').value);
     });
   </script>
 </body>
 </html>
-```
