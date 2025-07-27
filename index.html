@@ -1,356 +1,141 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLOSE – Private Events</title>
-
-  <!-- Google Fonts (clean) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      /* Color Palette */
-      --color-black: #000;
-      --color-white: #fff;
-      --color-dark-gray: #444;
-      --color-light-gray: rgba(255, 255, 255, 0.05);
-      --color-accent-pink: #D1007F;
-      --color-dark-pink: #8B004B;
-      --color-gold: #FFD700;
-      --color-dark-bg-select: #111;
-
-      /* Font Families */
-      --font-primary: 'Cormorant Garamond', serif;
-
-      /* Spacing */
-      --spacing-xs: 10px;
-      --spacing-sm: 15px;
-      --spacing-md: 20px;
-      --spacing-lg: 30px;
-
-      /* Border Radii */
-      --border-radius-sm: 8px;
-      --border-radius-md: 12px;
-
-      /* Font Sizes */
-      --font-size-base: 1rem;
-      --font-size-lg: 1.1rem;
-      --font-size-xl: 2.5rem;
-    }
-
-    /* Base Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: var(--color-black);
-      color: var(--color-white);
-      font-family: var(--font-primary);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: var(--spacing-md);
-      text-align: center;
-    }
-
-    /* 3D gradient title */
-    h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: var(--spacing-md);
-      background: linear-gradient(135deg, #ff0844 0%, #8B004B 50%, #ff0844 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 8px rgba(209,0,127,0.4);
-      transform: perspective(400px) rotateX(10deg);
-      letter-spacing: 1px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 500px;
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-sm);
-      animation: fadeInUp 0.8s ease-out forwards;
-      opacity: 0;
-      transform: translateY(var(--spacing-lg));
-    }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLOSE CRM Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: #fff;
+        font-family: 'Montserrat', sans-serif;
+        color: #000;
+        margin: 0;
+        padding: 20px;
       }
-    }
+      h1 {
+        color: #c10016;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 700;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .controls input,
+      .controls select,
+      .controls button {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: none;
+      }
+      .controls input {
+        flex: 1;
+        border: 1px solid #ccc;
+      }
+      .controls button {
+        background-color: #c10016;
+        color: #fff;
+        cursor: pointer;
+      }
+      .controls button:hover {
+        background-color: #e3122b;
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        background-color: #fff;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        border: 1px solid #eee;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+      }
+      .card h3 {
+        color: #c10016;
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      .card p {
+        margin: 4px 0;
+        color: #000;
+      }
+      .card p strong {
+        font-weight: 700;
+        color: #c10016;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CLOSE | Guest Management</h1>
 
-    label {
-      text-align: left;
-      font-size: var(--font-size-lg);
-    }
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search by name or phone..." onkeyup="filterTable()" />
+      <button onclick="filterStatus('all')">All</button>
+      <button onclick="filterStatus('yes')">Confirmed</button>
+      <button onclick="filterStatus('no')">Not Confirmed</button>
+    </div>
 
-    input,
-    select,
-    textarea {
-      padding: var(--spacing-xs);
-      background: var(--color-light-gray);
-      border: 1px solid var(--color-dark-gray);
-      border-radius: var(--border-radius-sm);
-      color: var(--color-white);
-      font-family: var(--font-primary);
-      font-size: var(--font-size-base);
-    }
+    <div id="guestGrid" class="grid-container"></div>
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--color-accent-pink);
-      outline: none;
-    }
+    <script>
+      const apiUrl = "https://api.sheetbest.com/sheets/3b575219-6f66-44e0-b1ef-babf85af77a8";
+      const guestGrid = document.querySelector("#guestGrid");
+      let guests;
 
-    .btn {
-      padding: 12px;
-      font-weight: bold;
-      font-size: var(--font-size-lg);
-      color: var(--color-white);
-      background: transparent;
-      border: 2px solid;
-      border-image: linear-gradient(45deg, var(--color-dark-pink), var(--color-accent-pink)) 1;
-      border-radius: var(--border-radius-md);
-      cursor: pointer;
-      transition: box-shadow 0.3s ease, background 0.3s ease;
-    }
-
-    .btn:hover {
-      box-shadow: 0 0 12px var(--color-accent-pink);
-      background: var(--color-light-gray);
-    }
-
-    .success-message {
-      color: var(--color-gold);
-      margin-top: var(--spacing-md);
-      font-weight: bold;
-      animation: fadeIn 0.5s ease-out forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .lang-select {
-      align-self: flex-end;
-      margin-bottom: var(--spacing-sm);
-      background: var(--color-dark-bg-select);
-      color: var(--color-gold);
-      border: none;
-      font-family: var(--font-primary);
-      padding: var(--spacing-xs);
-      border-radius: var(--border-radius-sm);
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Language switcher -->
-  <select class="lang-select" onchange="updateText(this.value)" aria-label="Select Language">
-    <option value="en">EN</option>
-    <option value="es">ES</option>
-    <option value="fr">FR</option>
-    <option value="de">DE</option>
-  </select>
-
-  <h1 id="title">Join CLOSE</h1>
-
-  <form class="container" id="closeForm" aria-live="polite">
-    <label for="name" id="label-name">Full Name</label>
-    <input type="text" id="name" name="name" required autocomplete="name">
-
-    <label for="age" id="label-age">Age</label>
-    <input type="number" id="age" name="age" min="18" required aria-describedby="age-help">
-    <small id="age-help" style="display:none;">Must be 18 years or older.</small>
-
-    <label for="city" id="label-city">City</label>
-    <input type="text" id="city" name="city" required autocomplete="address-level2">
-
-    <label for="contact" id="label-contact">Preferred Contact Method</label>
-    <select id="contact" name="contact" required>
-      <option value="">Select</option>
-      <option value="WhatsApp">WhatsApp</option>
-      <option value="Email">Email</option>
-      <option value="SMS">SMS</option>
-    </select>
-
-    <label for="number" id="label-number">Contact Number</label>
-    <input type="tel" id="number" name="number" required autocomplete="tel">
-
-    <label for="portfolio" id="label-portfolio">Social/Portfolio (optional)</label>
-    <input type="url" id="portfolio" name="portfolio" placeholder="https://instagram.com/yourprofile">
-
-    <label for="why" id="label-why">Why do you want to attend?</label>
-    <textarea id="why" name="why" rows="4" required></textarea>
-
-    <label for="availability" id="label-availability">Availability</label>
-    <input type="text" id="availability" name="availability" required placeholder="e.g., Weekends, Evenings">
-
-    <button class="btn" type="submit">Submit Request</button>
-
-    <div class="success-message" id="successMessage" style="display:none" role="status">Request Sent ✔</div>
-    <div class="error-message" id="errorMessage" style="display:none; color: red; margin-top: 10px;" role="alert"></div>
-  </form>
-
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
-
-    const form = document.getElementById('closeForm');
-    const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      successMessage.style.display = 'none';
-      errorMessage.style.display = 'none';
-      errorMessage.textContent = '';
-
-      const ageInput = document.getElementById('age');
-      if (ageInput.value < 18) {
-        errorMessage.textContent = translations[document.querySelector('.lang-select').value]['error-age'];
-        errorMessage.style.display = 'block';
-        ageInput.focus();
-        return;
+      async function fetchGuests() {
+        const res = await fetch(apiUrl);
+        guests = await res.json();
+        renderGrid(guests);
       }
 
-      fetch(scriptURL, { method: 'POST', body: new FormData(form) })
-        .then(response => {
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          return response.text();
-        })
-        .then(() => {
-          form.reset();
-          successMessage.style.display = 'block';
-          setTimeout(() => successMessage.style.display = 'none', 5000);
-        })
-        .catch(() => {
-          errorMessage.textContent = translations[document.querySelector('.lang-select').value]['error-send'];
-          errorMessage.style.display = 'block';
+      function renderGrid(data) {
+        guestGrid.innerHTML = "";
+        data.forEach(guest => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${guest["Full Name"] || "Unnamed"}</h3>
+            <p><strong>Age:</strong> ${guest.Age || "-"}</p>
+            <p><strong>City:</strong> ${guest.City || "-"}</p>
+            <p><strong>Preferred Contact:</strong> ${guest["Preferred Contact Method"] || "-"}</p>
+            <p><strong>Phone:</strong> ${guest["Contact Number"] || "-"}</p>
+            <p><strong>Social:</strong> ${guest["Social/Portfolio"] || "-"}</p>
+            <p><strong>Why Attend:</strong> ${guest["Why Attend"] || "-"}</p>
+            <p><strong>Availability:</strong> ${guest.Availability || "-"}</p>
+          `;
+          guestGrid.appendChild(card);
         });
-    });
-
-    const translations = {
-      en: {
-        title: "Join CLOSE",
-        'label-name': "Full Name",
-        'label-age': "Age",
-        'label-city': "City",
-        'label-contact': "Preferred Contact Method",
-        'label-number': "Contact Number",
-        'label-portfolio': "Social/Portfolio (optional)",
-        'label-why': "Why do you want to attend?",
-        'label-availability': "Availability",
-        'select-option-placeholder': "Select",
-        'contact-whatsapp': "WhatsApp",
-        'contact-email': "Email",
-        'contact-sms': "SMS",
-        'submit-button': "Submit Request",
-        'success-message': "Request Sent ✔",
-        'error-age': "You must be 18 years or older to apply.",
-        'error-send': "Error sending form. Please try again."
-      },
-      es: {
-        title: "Unirse a CLOSE",
-        'label-name': "Nombre completo",
-        'label-age': "Edad",
-        'label-city': "Ciudad",
-        'label-contact': "Método de contacto preferido",
-        'label-number': "Número de contacto",
-        'label-portfolio': "Red social / Portafolio (opcional)",
-        'label-why': "¿Por qué quieres asistir?",
-        'label-availability': "Disponibilidad",
-        'select-option-placeholder': "Seleccionar",
-        'contact-whatsapp': "WhatsApp",
-        'contact-email': "Correo electrónico",
-        'contact-sms': "SMS",
-        'submit-button': "Enviar solicitud",
-        'success-message': "Solicitud enviada ✔",
-        'error-age': "Debes tener 18 años o más para aplicar.",
-        'error-send': "Error al enviar el formulario. Por favor, inténtalo de nuevo."
-      },
-      fr: {
-        title: "Rejoindre CLOSE",
-        'label-name': "Nom complet",
-        'label-age': "Âge",
-        'label-city': "Ville",
-        'label-contact': "Méthode de contact préférée",
-        'label-number': "Numéro de contact",
-        'label-portfolio': "Réseau social / Portfolio (optionnel)",
-        'label-why': "Pourquoi souhaitez-vous participer ?",
-        'label-availability': "Disponibilité",
-        'select-option-placeholder': "Sélectionner",
-        'contact-whatsapp': "WhatsApp",
-        'contact-email': "E-mail",
-        'contact-sms': "SMS",
-        'submit-button': "Envoyer la demande",
-        'success-message': "Demande envoyée ✔",
-        'error-age': "Vous devez avoir 18 ans ou plus pour postuler.",
-        'error-send': "Erreur lors de l'envoi du formulaire. Veuillez réessayer."
-      },
-      de: {
-        title: "CLOSE beitreten",
-        'label-name': "Vollständiger Name",
-        'label-age': "Alter",
-        'label-city': "Stadt",
-        'label-contact': "Bevorzugte Kontaktmethode",
-        'label-number': "Telefonnummer",
-        'label-portfolio': "Soziales Profil / Portfolio (opcional)",
-        'label-why': "Warum möchtest du teilnehmen?",
-        'label-availability': "Verfügbarkeit",
-        'select-option-placeholder': "Auswählen",
-        'contact-whatsapp': "WhatsApp",
-        'contact-email': "E-Mail",
-        'contact-sms': "SMS",
-        'submit-button': "Anfrage senden",
-        'success-message': "Anfrage gesendet ✔",
-        'error-age': "Sie müssen mindestens 18 Jahre alt sein, um sich zu bewerben.",
-        'error-send': "Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut."
       }
-    };
 
-    function updateText(lang) {
-      const t = translations[lang];
-      document.getElementById('title').innerText = t.title;
-      document.getElementById('label-name').innerText = t['label-name'];
-      document.getElementById('label-age').innerText = t['label-age'];
-      document.getElementById('label-city').innerText = t['label-city'];
-      document.getElementById('label-contact').innerText = t['label-contact'];
-      document.getElementById('label-number').innerText = t['label-number'];
-      document.getElementById('label-portfolio').innerText = t['label-portfolio'];
-      document.getElementById('label-why').innerText = t['label-why'];
-      document.getElementById('label-availability').innerText = t['label-availability'];
-      document.querySelector('.btn').innerText = t['submit-button'];
-      successMessage.innerText = t['success-message'];
+      function filterTable() {
+        const query = document.getElementById("search").value.toLowerCase();
+        const filtered = guests.filter(g =>
+          (g["Full Name"] || "").toLowerCase().includes(query) ||
+          (g["Contact Number"] || "").includes(query)
+        );
+        renderGrid(filtered);
+      }
 
-      const contactSelect = document.getElementById('contact');
-      contactSelect.options[0].text = t['select-option-placeholder'];
-      contactSelect.options[1].text = t['contact-whatsapp'];
-      contactSelect.options[2].text = t['contact-email'];
-      contactSelect.options[3].text = t['contact-sms'];
+      function filterStatus(status) {
+        if (status === "all") return renderGrid(guests);
+        const filtered = guests.filter(g => (g.Confirmed || "").toLowerCase() === status);
+        renderGrid(filtered);
+      }
 
-      errorMessage.style.display = 'none';
-      errorMessage.textContent = '';
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      updateText(document.querySelector('.lang-select').value);
-    });
-  </script>
-</body>
+      fetchGuests();
+    </script>
+  </body>
 </html>
